@@ -45,7 +45,7 @@ router.post('/', (req,res) => {
         if (!notes) {
             res.status(400).json({ error: "Please provide notes in your input.",err });
         }
-        if (description.length <1 || description.length > 128) {
+        if (description.length < 1 || description.length > 128) {
             res.status(400).json({
               error: "Please provide a description no longer than 128 characters.",err });
         } 
