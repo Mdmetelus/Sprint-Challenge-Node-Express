@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const actDB = require('../helpers/actionModel');
+const prDB = require('../helpers/projectModel');
 
 //++++++++++++++++++++++++++++++++++++++++++
 // get endpoints
@@ -32,7 +33,7 @@ router.get('/:id', (req,res) => {
 router.post('/', (req,res) => {
     const action = req.body;
     const { id } = req.params;
-    actDB.get(id).then( pr => {
+    prDB.get(id).then( pr => {
         if (!action.description || !action.notes) {
             return res.status(400).json({ message: 'You need to add Description and or Notes', err});
         }
@@ -50,7 +51,7 @@ router.post('/', (req,res) => {
 //++++++++++++++++++++++++++++++++++++++++
 // - delete stuff here
 //++++++++++++++++++++++++++++++++++++++++
-router.delete('./:id', (req, res) => {
+router.delete('/:id', (req, res) => {
     const id = req.params.id;
     actDB.remove(id).then(delEach => {
         if (!delEach) {
@@ -66,6 +67,21 @@ router.delete('./:id', (req, res) => {
 //++++++++++++++++++++++++++++++++++++++++
 // - update  stuff here
 //++++++++++++++++++++++++++++++++++++++++
+router.put('/:id', (req, res) => {
+    const id = req.params.id;
+    const thisAction = req.body;
+    if (!thisAction.description || !thisAction.notes) {
+        return res.status(400)
+            .json({ error: 'Please include both description and action', err });
+      }
+    actDB.update(id, thisAction).then(newAct => {
+        if (newAct === null) {
+            res.status(404).join({ error: "This id does not exist", err });
+          }
+        res.status(200).json({newAct});
+    }).catch(err =>
+        res.status(500).json({ error: 'No update made. Please Try again', err }));
+});
 
 
 
