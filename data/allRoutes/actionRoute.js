@@ -30,7 +30,7 @@ router.get('/:id', (req,res) => {
 //++++++++++++++++++++++++++++++++++++++++
 // - post stuff here
 //++++++++++++++++++++++++++++++++++++++++
-router.post('/', (req,res) => {
+router.post('/project_id', (req,res) => {
     const action = req.body;
     const { id } = req.params;
     prDB.get(id).then( pr => {

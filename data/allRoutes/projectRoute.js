@@ -30,7 +30,7 @@ router.get('/:id', (req, res) => {
             .json({ error: 'Failure, no projects! Try again.'})});
 });
 
-router.get('/:projectsId/actions', (req, res) => {
+router.get('/:id/actions', (req, res) => {
     const projectsId = req.params.id;
     prDB.getProjectActions(projectsId).then(thisPrsAss => {
         if (!thisPrsAss.length) {
