@@ -13,7 +13,7 @@ router.get('/', (req, res) => {
         res.status(200).json(allPrs);
         console.log(allPrs);
     }).catch(err => {
-        res.status(500).json({ message: 'Failure, no projects! Try again.'})
+        res.status(500).json({ error: 'Failure, no projects! Try again.'})
     });
 });
 
@@ -27,10 +27,22 @@ router.get('/:id', (req, res) => {
         res.status(200).json(eachPr);
     }).catch( err => {
         res.status(500)
-            .json({ message: 'Failure, no projects! Try again.'})});
+            .json({ error: 'Failure, no projects! Try again.'})});
 });
 
-
+//++++++++++++++++++++++++++++++++++++++++
+// - post stuff here
+//++++++++++++++++++++++++++++++++++++++++
+router.post('/', (req, res) => {
+    const project = req.body;
+    if (projects.description && project.name) {
+        prDB.insert(project).then( nextProject => {
+            res.status(201).json(nextProject);
+        }).catch(err => { res.status(500).json({error: 'No post imput Added, Try again.', err})})
+    } else {
+        res.status(404).json({error: 'You are missing either a name or a discriotion', err})
+    }
+});
 
 
 
