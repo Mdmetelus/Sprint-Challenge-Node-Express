@@ -12,9 +12,9 @@ const parser = express.json();
 
 server.use( parser, morganLogger('short'), helmet(), cors(),);
 
-server.use('/api/projects', actRouter)
+server.use('/api/projects', prRouter)
 
-server.use('/api/actions', prRouter)
+server.use('/api/actions', actRouter)
 
 
 const port = process.env.PORT || 5050;
