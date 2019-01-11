@@ -44,6 +44,27 @@ router.post('/', (req, res) => {
     }
 });
 
+//++++++++++++++++++++++++++++++++++++++++
+// - delete stuff here
+//++++++++++++++++++++++++++++++++++++++++
+
+router.delete('/:id', (req,res) => {
+    const id = req.params.id;
+    prDB.remove(id).then(count => {
+        res.status(200).json({message: 'Item Deleted'});
+    }).catch( err => {
+        res.status(500).json({ error:'Nothing Was Deleted, Please Try again', err })
+    })
+});
+
+
+//++++++++++++++++++++++++++++++++++++++++
+// - update  stuff here
+//++++++++++++++++++++++++++++++++++++++++
+
+
+
+
 
 
 module.exports = router;
