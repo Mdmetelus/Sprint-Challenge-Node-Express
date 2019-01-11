@@ -13,6 +13,7 @@ router.get('/', (req, res) => {
             res.status(500).json({message: 'Failure, no Actions! Try again.'})
         })
 });
+// [ x ]
 
 router.get('/:id', (req,res) => {
     const id = req.params.id;
@@ -26,27 +27,39 @@ router.get('/:id', (req,res) => {
     });
     
 });
+// [ x ]
 
 //++++++++++++++++++++++++++++++++++++++++
 // - post stuff here
 //++++++++++++++++++++++++++++++++++++++++
-router.post('/project_id', (req,res) => {
-    const action = req.body;
+router.post('/', (req,res) => {
+    const { project_id, description, notes, completed } = req.body;
     const { id } = req.params;
-    prDB.get(id).then( pr => {
-        if (!action.description || !action.notes) {
-            return res.status(400).json({ message: 'You need to add Description and or Notes', err});
+    
+    console.log({ project_id, description, notes, completed });
+    console.log(project_id);
+    
+        if (!project_id) {
+            res.status(400).json({ error: "Please put an accurate Project ID",err });
+          } 
+        if (!notes) {
+            res.status(400).json({ error: "Please provide notes in your input.",err });
         }
-        if( pr ) {
-            actDB.insert({id, ...action }).then(nextAction => {
-                res.status(201).json(nextAction)
-            }).catch(err => {res.status(500).json({error: 'Action not Added', err})
+        if (description.length <1 || description.length > 128) {
+            res.status(400).json({
+              error: "Please provide a description no longer than 128 characters.",err });
+        } 
+        if (!description) {
+            return res.status(400).json({ error: 'You need to add a description.', err });
+        }
+        
+        actDB.insert({ project_id, description, notes, completed })
+            .then(nextAction => { res.status(201).json(nextAction);
+            })
+            .catch(err => {res.status(500).json({error: 'Action not Added', err})
             });
-        } else {
-            return res.status(404).json({error: 'No proget with that id', err});
-        }
-    })
 });
+// [ x ]
 
 //++++++++++++++++++++++++++++++++++++++++
 // - delete stuff here
@@ -57,30 +70,46 @@ router.delete('/:id', (req, res) => {
         if (!delEach) {
             res.status(404).json({error:'no item deleted',err})
         }
-        res.status(200).json({ message: "This action was removed" });
+        res.status(204).json({ message: `This action was removed.` });
     }).catch(err =>
         res.status(500)
             .json({ error: "No item deleted,  Pleease Try again", err }));
 });
+// [ x ]
 
 
 //++++++++++++++++++++++++++++++++++++++++
 // - update  stuff here
 //++++++++++++++++++++++++++++++++++++++++
 router.put('/:id', (req, res) => {
-    const id = req.params.id;
-    const thisAction = req.body;
-    if (!thisAction.description || !thisAction.notes) {
-        return res.status(400)
-            .json({ error: 'Please include both description and action', err });
-      }
-    actDB.update(id, thisAction).then(newAct => {
-        if (newAct === null) {
-            res.status(404).join({ error: "This id does not exist", err });
-          }
-        res.status(200).json({newAct});
-    }).catch(err =>
-        res.status(500).json({ error: 'No update made. Please Try again', err }));
+    const {id} = req.params;
+    const { project_id, description, notes, completed }  = req.body;
+
+    console.log({ project_id, description, notes, completed });
+    console.log(project_id);
+
+    // if (!description || !notes || !completed || !project_id) {
+    //     return res.status(400)
+    //         .json({ error: 'Inmput Details Missing. Please include all nessesary inputs.', err });
+    // }
+    if (!project_id) {
+        res.status(400).json({ error: "Please put an accurate Project ID",err });
+      } 
+    if (!notes) {
+        res.status(400).json({ error: "Please provide notes in your input.",err });
+    }
+    if (description.length <1 || description.length > 128) {
+        res.status(400).json({
+          error: "Please provide a description no longer than 128 characters.",err });
+    } 
+    if (!description) {
+        return res.status(400).json({ error: 'You need to add a description.', err });
+    }
+    
+    actDB.update(id, { project_id, description, notes, completed } )
+        .then(newAct => { res.status(200).json(newAct);})
+        .catch(err => res.status(500)
+            .json({ error: 'No update made. Please Try again', err }));
 });
 
 

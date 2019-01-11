@@ -14,7 +14,13 @@ module.exports = {
         let [project, actions] = results;
         project.actions = actions;
 
-        return mappers.projectToBody(project);
+        if (!project) {
+					return null;
+				} else {
+					project.actions = actions;
+
+					return mappers.projectToBody(project);
+				}
       });
     }
 
