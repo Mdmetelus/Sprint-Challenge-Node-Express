@@ -45,7 +45,6 @@ the api can redurn status codes like 200, 201, 204, and etc, to in form the clie
 express has some incresed functionality to partition an app via the express router.
 
 ## Project Setup
-
 Follow these steps to set up and work on your project:
 
 - [ ] Create a forked copy of this project.
